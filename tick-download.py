@@ -8,40 +8,40 @@ from pathlib import Path
 
 import websockets
 
-# OpenAPI ¹®¼­
+# OpenAPI ë¬¸ì„œ
 # https://openapi.ebestsec.co.kr/intro
 
-# ÀıÂ÷
+# ì ˆì°¨
 # 1. pip install websockets
-# 2. º»ÀÎÀÇ KEY Á¤º¸ Ãß°¡
-# 3. downÇÏ°íÀÚ ÇÏ´Â ÀÏÀÚ
-# 4. downÇÏ°íÀÚ ÇÏ´Â ticker
-# 5. tick-download.py ½ÇÇà
-#    ÇÑ¹ø ´õ ½ÇÇàÇÏ¶ó°í ÇÏ¸é À§ È­»ìÇ¥ ´­·¯¼­ ÇÑ¹ø ´õ ½ÇÇà
-# 6. download ³¡³µÀ¸¸é tick-merge.py ½ÇÇà
-# 7. down ¹ŞÀº tick data´Â future_tick folder¿¡ ÀÖÀ½
+# 2. ë³¸ì¸ì˜ KEY ì •ë³´ ì¶”ê°€
+# 3. downí•˜ê³ ì í•˜ëŠ” ì¼ì
+# 4. downí•˜ê³ ì í•˜ëŠ” ticker
+# 5. tick-download.py ì‹¤í–‰
+#    í•œë²ˆ ë” ì‹¤í–‰í•˜ë¼ê³  í•˜ë©´ ìœ„ í™”ì‚´í‘œ ëˆŒëŸ¬ì„œ í•œë²ˆ ë” ì‹¤í–‰
+# 6. download ëë‚¬ìœ¼ë©´ tick-merge.py ì‹¤í–‰
+# 7. down ë°›ì€ tick dataëŠ” future_tick folderì— ìˆìŒ
 
-APP_KEY = "º»ÀÎÀÇ key"
-SECRET_KEY = "º»ÀÎÀÇ sec key"
+APP_KEY = "ë³¸ì¸ì˜ key"
+SECRET_KEY = "ë³¸ì¸ì˜ sec key"
 
 date   = '20240125'
 ticker = '101V3000'
 
 
-# ÀÌÇÏ ¼öÁ¤ÇÒ ÇÊ¿ä¾ø´Â ºÎºĞ
+# ì´í•˜ ìˆ˜ì •í•  í•„ìš”ì—†ëŠ” ë¶€ë¶„
 BASE_URL = "https://openapi.ebestsec.co.kr:8080"
 
-n_tick = 1 # ÀúÀåÇÏ°íÇÏ´Â Æ½ ´ÜÀ§
+n_tick = 1 # ì €ì¥í•˜ê³ í•˜ëŠ” í‹± ë‹¨ìœ„
 
-# download °úÁ¤¿¡ ÇÊ¿äÇÑ folder.
-# ÇÊ¿äÇÑ dir°¡ ÀÖ´ÂÁö È®ÀÎ, ¾øÀ¸¸é ¸¸µç´Ù.
+# download ê³¼ì •ì— í•„ìš”í•œ folder.
+# í•„ìš”í•œ dirê°€ ìˆëŠ”ì§€ í™•ì¸, ì—†ìœ¼ë©´ ë§Œë“ ë‹¤.
 FO_TICK_PATH_SEQ = '.\\future_tick_seq'
 
-# downloadÇÑ °á°ú¸¦ ÀúÀåÇÒ folder.
-# ´Ù¸¥ ÀÌ¸§À» ¿øÇÑ´Ù¸é ¾Æ·¡ ÀÌ¸§À» ¹Ù²Û´Ù
+# downloadí•œ ê²°ê³¼ë¥¼ ì €ì¥í•  folder.
+# ë‹¤ë¥¸ ì´ë¦„ì„ ì›í•œë‹¤ë©´ ì•„ë˜ ì´ë¦„ì„ ë°”ê¾¼ë‹¤
 FO_TICK_PATH = '.\\future_tick'
 
-# ÀÌÇÏ ¼öÁ¤ÇÒ ÇÊ¿ä¾ø´Â ºÎºĞ ³¡
+# ì´í•˜ ìˆ˜ì •í•  í•„ìš”ì—†ëŠ” ë¶€ë¶„ ë
 
 
 if not os.access(FO_TICK_PATH_SEQ, os.F_OK):
@@ -49,7 +49,7 @@ if not os.access(FO_TICK_PATH_SEQ, os.F_OK):
 if not os.access(FO_TICK_PATH, os.F_OK):
     os.makedirs(FO_TICK_PATH, exist_ok=True)
 
-# Ã¹ ÁÙÀº titleÀÌ¶ó°í °¡Á¤, ÀÌÈÄ¿¡ title °ªÀ» key·Î °®´Â dict·Î ÀĞ±â
+# ì²« ì¤„ì€ titleì´ë¼ê³  ê°€ì •, ì´í›„ì— title ê°’ì„ keyë¡œ ê°–ëŠ” dictë¡œ ì½ê¸°
 def get_new_item(keys, row) :
     data = {}
     num_none = 0
@@ -82,7 +82,7 @@ def read_csv_to_dict(fname, encoding='utf-8') :
                     if ret == None :
                         return data      
                     data.append(ret)
-    except  Exception as e : # ¶Ç´Â except : 
+    except  Exception as e : # ë˜ëŠ” except : 
         data = []
         print(e, fname)
     
@@ -92,7 +92,7 @@ def read_csv_to_dict(fname, encoding='utf-8') :
 #
 def save_to_file_csv(file_name, data) :
     with open(file_name,'w',encoding="cp949") as make_file: 
-        # title ÀúÀå
+        # title ì €ì¥
         vals = data[0].keys()
         ss = ''
         for val in vals:
@@ -128,13 +128,13 @@ def load_json_from_file(file_name, err_msg=1) :
         with open(file_name,'r',encoding="cp949") as make_file: 
            data=json.load(make_file) 
         make_file.close()
-    except  Exception as e : # ¶Ç´Â except : 
+    except  Exception as e : # ë˜ëŠ” except : 
         data = {}
         if err_msg :
             print(e, file_name)
     return data
    
-# ÆÄ»ıÀÎÀÇ ½°ÅÍ ²Ş¿¡´Ô ÄÚµå ÀÎ¿ë
+# íŒŒìƒì¸ì˜ ì‰¼í„° ê¿ˆì—ë‹˜ ì½”ë“œ ì¸ìš©
 def get_token_websocket():
     PATH = "/oauth2/token"
     headers = {"content-type": "application/x-www-form-urlencoded"}
@@ -162,16 +162,16 @@ def get_token():
 
     return body["access_token"]
 
-# ncnt : tick ´ÜÀ§(n tick) 1, 3, 5 µîµî
-# qrycnt : ¿äÃ»°Ç¼ö ÇÑ¹ø ºÒ¸®¾îÁú ¶§ ÃÖ´ë tick ¼ö max 500
-# edate : ¹Ş°íÀÚ ÇÏ´Â ÀÏÀÚ
-# ctsdate : ¿¬¼Ó Á¶È¸½Ã ÀÏÀÚ
-# ctsdate : ¿¬¼Ó Á¶È¸½Ã ½Ã°£
+# ncnt : tick ë‹¨ìœ„(n tick) 1, 3, 5 ë“±ë“±
+# qrycnt : ìš”ì²­ê±´ìˆ˜ í•œë²ˆ ë¶ˆë¦¬ì–´ì§ˆ ë•Œ ìµœëŒ€ tick ìˆ˜ max 500
+# edate : ë°›ê³ ì í•˜ëŠ” ì¼ì
+# ctsdate : ì—°ì† ì¡°íšŒì‹œ ì¼ì
+# ctsdate : ì—°ì† ì¡°íšŒì‹œ ì‹œê°„
 def get_n_tick_fo(ticker, ncnt, qrycnt, edate, ctsdate=' ', ctstime=' '):
     block = 't8414InBlock'
     PATH = "/futureoption/chart"
     cont = 'Y'
-    if ctsdate == ' ' : # Ã³À½¿¡´Â(ctsdate °ªÀÌ ' '°¡ ¾Æ´Ï¸é) ¿¬¼ÓÁ¶È¸ 0 ÀÌÈÄ¿¡´Â 1
+    if ctsdate == ' ' : # ì²˜ìŒì—ëŠ”(ctsdate ê°’ì´ ' 'ê°€ ì•„ë‹ˆë©´) ì—°ì†ì¡°íšŒ 0 ì´í›„ì—ëŠ” 1
         cont = 'N'
     
     headers = {"content-type": "application/json; charset=utf-8", "authorization": "Bearer "+token,
@@ -195,68 +195,17 @@ def get_n_tick_fo(ticker, ncnt, qrycnt, edate, ctsdate=' ', ctstime=' '):
     result = requests.post(BASE_URL+PATH, headers=headers, data=json.dumps(body))
     
     body = result.json()
-    if '00000' != body['rsp_cd'] : # ¿À·ùÀÓ, ¿À·ù ¸Ş¼¼Áö Âï°í Á¾·á
+    if '00000' != body['rsp_cd'] : # ì˜¤ë¥˜ì„, ì˜¤ë¥˜ ë©”ì„¸ì§€ ì°ê³  ì¢…ë£Œ
         print(body['rsp_msg'])
         return None
 
     return [body['t8414OutBlock1'], body['t8414OutBlock']]
 
-#repeat : mergeÇÒ ÃÖ´ë seq °ª
-def merge_fop_data_tick(in_folder, out_foler, dt, ticker, repeat) :
-    merged = []
-    pre_data = []
-    for seq in range(repeat,0,-1) :
-        fname = 'seq_' + dt + '_fut_' + ticker + '_tick-1-' + str(seq)+'.csv'
-        if seq % 50 == 0:
-            print(fname)  
-        data = read_csv_to_dict(in_folder+'\\'+fname)
-        if len(data) == 0 :
-            continue
-        # ³¯Â¥°¡ Æ²¸° °æ¿ì Á¦°Å
-        if dt != data[0]['date']:
-            data = get_tick_data_remove_dif_date(data, dt)
-        # Áßº¹µÈ µ¥ÀÌÅÍ´Â Á¦°Å
-        data = get_tick_data_after_remove_dup(data, pre_data)
-        merged += data
-        pre_data = data
-    if len(merged) > 0 :
-        fname = dt + '_fut' + '_' + ticker+ '_tick-1.csv'
-        save_to_file_csv(out_foler+'\\'+fname, merged)
-
-# ³¯Â¥°¡ Æ²¸° ÀÚ·á »èÁ¦
-def get_tick_data_remove_dif_date(data, dt):
-    cnt = 0
-    for each in data:
-        if each['date'] != dt:
-            cnt += 1
-        else:
-            return data[cnt:]
-    print('error get_tick_data_remove_dif_date()')
-    return data
-
-# ¿ªÀ¸·Î mergeÇÏ¹Ç·Î Å« ¼ıÀÚ¿¡ ÀÖ´Â Á¤º¸°¡ Á¤È®ÇÔ. ÇöÀç data°ª Áß Áßº¹µÇ´Â °Í »èÁ¦
-def get_tick_data_after_remove_dup(data, pre_data):
-    if len(pre_data) == 0 : # ÃÖÃÊÀÓ
-        return data
-
-    if pre_data[-1]['time'] == data[0]['time']:
-        dup = 0
-        if 1:
-            last = data[0]['time']
-            dup = 0
-            for each in data:
-                if each['time'] == last:
-                    dup += 1
-                else:
-                    return data[dup:]  # Áßº¹µÇÁö ¾ÊÀº µ¥ÀÌÅÍ¸¸ µ¹·ÁÁÜ
-    else:
-        return data
-
-# tick µ¥ÀÌÅÍÀÇ msecÀÌ °°Àºµ¥ ¿¬¼Ó ¹Ş±âÀÇ ³¡¿¡ °É¸®´Â °æ¿ì¿¡ ebest api ¿À·ù ÀÖÀ½
+# tick ë°ì´í„°ì˜ msecì´ ê°™ì€ë° ì—°ì† ë°›ê¸°ì˜ ëì— ê±¸ë¦¬ëŠ” ê²½ìš°ì— ebest api ì˜¤ë¥˜ ìˆìŒ
 #1530028601  1
 #1530028601  2
-#1530029153  <- ¾Æ·¡´Â ¿©±â¸¦ Ã£´Â ÄÚµåÀÓ
-# ¿À·ù¿¡ ´ëÇÑ ÀÚ¼¼ÇÑ »çÇ×Àº ¾Æ·¡ ±Û Âü°í        
+#1530029153  <- ì•„ë˜ëŠ” ì—¬ê¸°ë¥¼ ì°¾ëŠ” ì½”ë“œì„
+# ì˜¤ë¥˜ì— ëŒ€í•œ ìì„¸í•œ ì‚¬í•­ì€ ì•„ë˜ ê¸€ ì°¸ê³         
 # https://money-expert.tistory.com/97
 def get_cts_time(ret):
     pos = 0
@@ -272,15 +221,15 @@ def get_cts_time(ret):
     print('error get_cts_time() ')
     return ret[0]['time']
 
-# 1ÃÊ¿¡ ÇÑ¹ø¾¿ 
-# 10ºĞ¿¡ 200°Ç.. 200°ÇÀÌ ³Ñ±âÁö ¾Ê°í 10ºĞÀº ±â´Ù·Á¾ß
-# future µ¥ÀÌÅÍ ÀúÀå ¿¬¼Ó
+# 1ì´ˆì— í•œë²ˆì”© 
+# 10ë¶„ì— 200ê±´.. 200ê±´ì´ ë„˜ê¸°ì§€ ì•Šê³  10ë¶„ì€ ê¸°ë‹¤ë ¤ì•¼
+# future ë°ì´í„° ì €ì¥ ì—°ì†
 def save_fo_tick_data(ticker, n_tick, edate) :
     ctsdate = ' '
     ctstime = ' '
-    times = 0 # ¸î ¹ø ¹İº¹ÇØ¼­ ºÒ¸®¾îÁ³´ÂÁö
+    times = 0 # ëª‡ ë²ˆ ë°˜ë³µí•´ì„œ ë¶ˆë¦¬ì–´ì¡ŒëŠ”ì§€
     
-    repeat = 200 # 10ºĞ¿¡ 200¹ø±îÁö¸¸ °¡´É
+    repeat = 200 # 10ë¶„ì— 200ë²ˆê¹Œì§€ë§Œ ê°€ëŠ¥
     query_cnt = 500
 
     # for test
@@ -289,49 +238,49 @@ def save_fo_tick_data(ticker, n_tick, edate) :
         query_cnt = 6
     # end test
 
-    # ¿¬¼Ó Á¶È¸ÀÎÁö È®ÀÎ
+    # ì—°ì† ì¡°íšŒì¸ì§€ í™•ì¸
     save_status = {}
-    st_name = 'future_cont.txt' # download Áß »ç¿ëÇÒ ÆÄÀÏ ¹«½ÃÇÏ¿©µµ µÊ
+    st_name = 'future_cont.txt' # download ì¤‘ ì‚¬ìš©í•  íŒŒì¼ ë¬´ì‹œí•˜ì—¬ë„ ë¨
     file_path = Path(st_name)
     if file_path.is_file():
         save_status = load_json_from_file(st_name)
         
-    if len(save_status) == 0 : # ÆÄÀÏÀÌ ¾ø´Ù¸é »ı¼º
+    if len(save_status) == 0 : # íŒŒì¼ì´ ì—†ë‹¤ë©´ ìƒì„±
         save_status = {'ctsdate':' ', 'ctstime':' ', 'end':0, 'times':0, 'normal':0}
         save_to_file_json(st_name, save_status)
     else: 
-        if save_status['normal'] == 0 : # ºñÁ¤»ó Á¾·áÀÓ ´Ù½Ã Ã³À½ºÎÅÍ
+        if save_status['normal'] == 0 : # ë¹„ì •ìƒ ì¢…ë£Œì„ ë‹¤ì‹œ ì²˜ìŒë¶€í„°
             save_status = {'ctsdate':' ', 'ctstime':' ', 'end':0, 'times':0, 'normal':0}
             save_to_file_json(st_name, save_status)
             
-    if save_status['end'] == 0 : # °è¼Ó down ¹Ş¾Æ¾ß ÇÑ´Ù.
+    if save_status['end'] == 0 : # ê³„ì† down ë°›ì•„ì•¼ í•œë‹¤.
         ctsdate = save_status['ctsdate']
         ctstime = save_status['ctstime']
         times   = save_status['times']
     print(save_status)    
-    print('¼±¹° tick ´Ù¿î·Îµå ½ÃÀÛ', edate)
+    print('ì„ ë¬¼ tick ë‹¤ìš´ë¡œë“œ ì‹œì‘', edate)
     if save_status['times'] == 0:
-        print(' 4 - 5ºĞ Á¤µµ °É¸³´Ï´Ù.')
+        print(' 4 - 5ë¶„ ì •ë„ ê±¸ë¦½ë‹ˆë‹¤.')
     else:
-        print(' 2 - 3ºĞ Á¤µµ °É¸³´Ï´Ù.')
+        print(' 2 - 3ë¶„ ì •ë„ ê±¸ë¦½ë‹ˆë‹¤.')
     
-    for i in range(0, repeat) : # ÃÖ´ë 200¹ø
+    for i in range(0, repeat) : # ìµœëŒ€ 200ë²ˆ
         ret = get_n_tick_fo(ticker, n_tick, query_cnt, edate, ctsdate=ctsdate, ctstime=ctstime) # 
-        if len(ret[0]) == 0 : # tick data ÀĞ±â ¿À·ù
+        if len(ret[0]) == 0 : # tick data ì½ê¸° ì˜¤ë¥˜
             print('tick reading err')
             break
 
-        data = ret[0] # Æ½ Á¤º¸°¡ µé¾îÀÖÀ½
+        data = ret[0] # í‹± ì •ë³´ê°€ ë“¤ì–´ìˆìŒ
         end = 0
         
-        seq = str(i+1 + times*repeat) # timesÀÇ ¹è¼ö·Î ¸Å¹ø ÀúÀåÇÒ sequence ¹øÈ£¸¦ °è»ê
+        seq = str(i+1 + times*repeat) # timesì˜ ë°°ìˆ˜ë¡œ ë§¤ë²ˆ ì €ì¥í•  sequence ë²ˆí˜¸ë¥¼ ê³„ì‚°
 
-        # ³¯Â¥°¡ º¯°æµÇ¾úÀ¸¸é Á¾·á
+        # ë‚ ì§œê°€ ë³€ê²½ë˜ì—ˆìœ¼ë©´ ì¢…ë£Œ
         if ret[1]['cts_date'] != edate :
             end = 1
             save_status['end'] = 1
 
-        # ¹ŞÀº tick µ¥ÀÌÅÍ ÀúÀå
+        # ë°›ì€ tick ë°ì´í„° ì €ì¥
         fname = FO_TICK_PATH_SEQ + '\\seq_' + edate + '_fut' + '_' + ticker + '_tick-' + str(n_tick) + '-' + str(seq) + '.csv'        
         save_to_file_csv(fname, data)
 
@@ -343,32 +292,32 @@ def save_fo_tick_data(ticker, n_tick, edate) :
         time.sleep(1)
             
         ctsdate = ret[1]['cts_date']
-        ctstime = get_cts_time(ret[0]) # ´ÙÀ½¿¡ ÀĞ¾î¾ßÇÒ tickÀÇ tm. api ¿À·ù°¡ ÀÖ¾î¼­ º°µµ·Î °è»êÇÔ
+        ctstime = get_cts_time(ret[0]) # ë‹¤ìŒì— ì½ì–´ì•¼í•  tickì˜ tm. api ì˜¤ë¥˜ê°€ ìˆì–´ì„œ ë³„ë„ë¡œ ê³„ì‚°í•¨
                         
         save_status['ctsdate'] = ctsdate
         save_status['ctstime'] = ctstime
 
-        # Áß°£ Áß°£ Ãâ·Â
+        # ì¤‘ê°„ ì¤‘ê°„ ì¶œë ¥
         if i % 10 == 0 :
             print(ctsdate, ctstime[0:6])
 
-    # 200¹ø ÀÌ»ó È£ÃâÀÌ ÇÊ¿äÇÏ¹Ç·Î, ´ÙÀ½ È£Ãâ½Ã 201¹øºÎÅÍ ÀúÀåÇÏ±â À§ÇÔ
+    # 200ë²ˆ ì´ìƒ í˜¸ì¶œì´ í•„ìš”í•˜ë¯€ë¡œ, ë‹¤ìŒ í˜¸ì¶œì‹œ 201ë²ˆë¶€í„° ì €ì¥í•˜ê¸° ìœ„í•¨
     save_status['times'] += 1
 
-    if save_status['end'] == 1 : # ¸ğµÎ ÀúÀåÇÔ        
+    if save_status['end'] == 1 : # ëª¨ë‘ ì €ì¥í•¨        
         os.remove(st_name)
-        print('\ntick download ³¡. ¾Æ·¡ ÆÄÀÏ ½ÇÇàÇÏ¿© mergeÇÏ¼¼¿ä.')
+        print('\ntick download ë. ì•„ë˜ íŒŒì¼ ì‹¤í–‰í•˜ì—¬ mergeí•˜ì„¸ìš”.')
         print('python tick-merge.py')        
     else:
         print('save status', save_status)
-        print('ÇÑ¹ø ´õ ½ÇÇàÇÏ¼¼¿ä!!')
+        print('í•œë²ˆ ë” ì‹¤í–‰í•˜ì„¸ìš”!!')
         save_status['normal'] = 1
         save_to_file_json(st_name, save_status)
 
-# OpenAPI »ç¿ëÀ» À§ÇÑ token ¸¸µé±â
+# OpenAPI ì‚¬ìš©ì„ ìœ„í•œ token ë§Œë“¤ê¸°
 token = get_token()
 
-# tick µ¥ÀÌÅÍ ´Ù¿î·Îµå
+# tick ë°ì´í„° ë‹¤ìš´ë¡œë“œ
 save_fo_tick_data(ticker, n_tick, date)
 
 
