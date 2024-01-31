@@ -3,18 +3,18 @@ import json
 import os
 import csv
 
-# download °úÁ¤¿¡ ÇÊ¿äÇÑ folder.
-# ÇÊ¿äÇÑ dir°¡ ÀÖ´ÂÁö È®ÀÎ, ¾øÀ¸¸é ¸¸µç´Ù.
+# download ê³¼ì •ì— í•„ìš”í•œ folder.
+# í•„ìš”í•œ dirê°€ ìˆëŠ”ì§€ í™•ì¸, ì—†ìœ¼ë©´ ë§Œë“ ë‹¤.
 FO_TICK_PATH_SEQ = '.\\future_tick_seq'
 
-# downloadÇÑ °á°ú¸¦ ÀúÀåÇÒ folder.
-# ´Ù¸¥ ÀÌ¸§À» ¿øÇÑ´Ù¸é ¾Æ·¡ ÀÌ¸§À» ¹Ù²Û´Ù
+# downloadí•œ ê²°ê³¼ë¥¼ ì €ì¥í•  folder.
+# ë‹¤ë¥¸ ì´ë¦„ì„ ì›í•œë‹¤ë©´ ì•„ë˜ ì´ë¦„ì„ ë°”ê¾¼ë‹¤
 FO_TICK_PATH = '.\\future_tick'
 
 if not os.access(FO_TICK_PATH, os.F_OK):
     os.makedirs(FO_TICK_PATH, exist_ok=True)
 
-# Ã¹ ÁÙÀº titleÀÌ¶ó°í °¡Á¤, ÀÌÈÄ¿¡ title °ªÀ» key·Î °®´Â dict·Î ÀĞ±â
+# ì²« ì¤„ì€ titleì´ë¼ê³  ê°€ì •, ì´í›„ì— title ê°’ì„ keyë¡œ ê°–ëŠ” dictë¡œ ì½ê¸°
 def get_new_item(keys, row) :
     data = {}
     num_none = 0
@@ -47,7 +47,7 @@ def read_csv_to_dict(fname, encoding='utf-8') :
                     if ret == None :
                         return data      
                     data.append(ret)
-    except  Exception as e : # ¶Ç´Â except : 
+    except  Exception as e : # ë˜ëŠ” except : 
         data = []
         print(e, fname)
     
@@ -57,7 +57,7 @@ def read_csv_to_dict(fname, encoding='utf-8') :
 #
 def save_to_file_csv(file_name, data) :
     with open(file_name,'w',encoding="cp949") as make_file: 
-        # title ÀúÀå
+        # title ì €ì¥
         vals = data[0].keys()
         ss = ''
         for val in vals:
@@ -93,13 +93,13 @@ def load_json_from_file(file_name, err_msg=1) :
         with open(file_name,'r',encoding="cp949") as make_file: 
            data=json.load(make_file) 
         make_file.close()
-    except  Exception as e : # ¶Ç´Â except : 
+    except  Exception as e : # ë˜ëŠ” except : 
         data = {}
         if err_msg :
             print(e, file_name)
     return data
 
-#repeat : mergeÇÒ ÃÖ´ë seq °ª
+#repeat : mergeí•  ìµœëŒ€ seq ê°’
 def merge_fop_data_tick(in_folder, out_foler, dt, ticker, repeat) :
     merged = []
     pre_data = []
@@ -110,10 +110,10 @@ def merge_fop_data_tick(in_folder, out_foler, dt, ticker, repeat) :
         data = read_csv_to_dict(in_folder+'\\'+fname)
         if len(data) == 0 :
             continue
-        # ³¯Â¥°¡ Æ²¸° °æ¿ì Á¦°Å
+        # ë‚ ì§œê°€ í‹€ë¦° ê²½ìš° ì œê±°
         if dt != data[0]['date']:
             data = get_tick_data_remove_dif_date(data, dt)
-        # Áßº¹µÈ µ¥ÀÌÅÍ´Â Á¦°Å
+        # ì¤‘ë³µëœ ë°ì´í„°ëŠ” ì œê±°
         data = get_tick_data_after_remove_dup(data, pre_data)
         merged += data
         pre_data = data
@@ -122,7 +122,7 @@ def merge_fop_data_tick(in_folder, out_foler, dt, ticker, repeat) :
         save_to_file_csv(fname, merged)
         print('\n', fname)
 
-# ³¯Â¥°¡ Æ²¸° ÀÚ·á »èÁ¦
+# ë‚ ì§œê°€ í‹€ë¦° ìë£Œ ì‚­ì œ
 def get_tick_data_remove_dif_date(data, dt):
     cnt = 0
     for each in data:
@@ -133,9 +133,9 @@ def get_tick_data_remove_dif_date(data, dt):
     print('error get_tick_data_remove_dif_date()')
     return data
 
-# ¿ªÀ¸·Î mergeÇÏ¹Ç·Î Å« ¼ıÀÚ¿¡ ÀÖ´Â Á¤º¸°¡ Á¤È®ÇÔ. ÇöÀç data°ª Áß Áßº¹µÇ´Â °Í »èÁ¦
+# ì—­ìœ¼ë¡œ mergeí•˜ë¯€ë¡œ í° ìˆ«ìì— ìˆëŠ” ì •ë³´ê°€ ì •í™•í•¨. í˜„ì¬ dataê°’ ì¤‘ ì¤‘ë³µë˜ëŠ” ê²ƒ ì‚­ì œ
 def get_tick_data_after_remove_dup(data, pre_data):
-    if len(pre_data) == 0 : # ÃÖÃÊÀÓ
+    if len(pre_data) == 0 : # ìµœì´ˆì„
         return data
 
     if pre_data[-1]['time'] == data[0]['time']:
@@ -147,12 +147,12 @@ def get_tick_data_after_remove_dup(data, pre_data):
                 if each['time'] == last:
                     dup += 1
                 else:
-                    return data[dup:]  # Áßº¹µÇÁö ¾ÊÀº µ¥ÀÌÅÍ¸¸ µ¹·ÁÁÜ
+                    return data[dup:]  # ì¤‘ë³µë˜ì§€ ì•Šì€ ë°ì´í„°ë§Œ ëŒë ¤ì¤Œ
     else:
         return data
 
-# mergeÇÒ Á¤º¸´Â FO_TICK_PATH_SEQ+'\\info.txt' ¿¡ ÀÖ´Ù
+# mergeí•  ì •ë³´ëŠ” FO_TICK_PATH_SEQ+'\\info.txt' ì— ìˆë‹¤
 info = load_json_from_file(FO_TICK_PATH_SEQ+'\\info.txt')
-merge_fop_data_tick(FO_TICK_PATH_SEQ, FO_TICK_PATH, info['date'], info['ticker'], info['max']) 
+merge_fop_data_tick(FO_TICK_PATH_SEQ, FO_TICK_PATH, info['date'], info['ticker'], int(info['max']))
 
 print('\ndone')
