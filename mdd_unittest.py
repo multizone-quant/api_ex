@@ -58,7 +58,7 @@ candles4 = [
 # dd = (최저 - 최고)/최대
 def cal_dd(low, high) :
     # dd 계산
-    return (low - high) / high
+    return (low - high) / abs(high)  # high가 음수면 dd가 양수로 바뀜.. 분모에 abs 추가
 
 # data : 시뮬 결과가 저장된 dict의 list
 # key :   mdd 계산시 사용할 key값
