@@ -65,7 +65,7 @@ def cal_dd(low, high) :
 # display : 중간과정 출력 여부(debugging용)
 def get_mdd(data, key, display=0):
     dds = []      # dd계산한 구간 정보 
-    mdd = 0       # mdd 값
+    mdd = 999     # mdd 값 (음수가 있으므로 최대값은 999)
     mdd_pos = -1  # mdd가 있는 곳의 위치
     high = data[0]
     low  = data[0]
