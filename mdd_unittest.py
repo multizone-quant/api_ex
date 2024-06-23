@@ -61,6 +61,8 @@ def cal_dd(low, high) :
     # dd 계산 방법 변경 필요함. 기존 방식에서 high로 나눈 건 잘못된 결과가 나옴
     # https://blog.naver.com/tradingidea/223487874424 참고
     return (low - high)   # 
+    return (low - high)  / high  # 기존 방식 
+        
 
 # data : 시뮬 결과가 저장된 dict의 list
 # key :   mdd 계산시 사용할 key값
